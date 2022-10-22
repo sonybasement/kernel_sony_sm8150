@@ -4160,6 +4160,7 @@ exit:
 int dsi_panel_set_nolp(struct dsi_panel *panel)
 {
 	int rc = 0;
+	int bl_lvl = 0;
 
 	if (!panel) {
 		pr_err("invalid params\n");
@@ -4181,6 +4182,12 @@ int dsi_panel_set_nolp(struct dsi_panel *panel)
 		}
 	}
 	panel->spec_pdata->aod_pending = AOD_PENDING_NONE;
+
+	// Force setting a valid brightness level
+	bl_lvl = dsi_panel_get_backlight(panel);
+	pr_notice("%s: Force setting a dsi panel brightness to %d", __func__,
+		  bl_lvl);
+	dsi_panel_set_backlight(panel, bl_lvl);
 #endif /* CONFIG_DRM_SDE_SPECIFIC_PANEL */
 
 	/**

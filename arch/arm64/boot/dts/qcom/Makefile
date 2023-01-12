@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0
-ifeq ($(TARGET_BOARD_TYPE),auto)
+ifeq ($(CONFIG_ARCH_SONY_KUMANO),y)
 ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)
 	dtbo-$(CONFIG_ARCH_SM8150) += \
 		sm8150-cdp-overlay.dtbo \

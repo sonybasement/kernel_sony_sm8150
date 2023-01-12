@@ -1,0 +1,9 @@
+obj-y				+= et6xx/
+obj-y				+= sec_ts/
+obj-y				+= tcs3490/
+obj-y				+= flash_led/
+obj-y				+= bu520x1nvx/
+obj-y				+= camera_sync/
+obj-y				+= sony_camera/
+obj-y				+= pn553/
+header-y			+= include/

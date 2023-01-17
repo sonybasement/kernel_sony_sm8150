@@ -4130,6 +4130,9 @@ int dsi_panel_set_lp1(struct dsi_panel *panel)
 	if (rc)
 		pr_err("[%s] failed to send DSI_CMD_SET_LP1 cmd, rc=%d\n",
 		       panel->name, rc);
+
+	// Set AOD Brightness value
+	dsi_panel_set_aod_change(panel, dsi_panel_get_backlight(panel));
 exit:
 	mutex_unlock(&panel->panel_lock);
 	return rc;

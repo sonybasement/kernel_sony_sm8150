@@ -91,6 +91,7 @@ static void wireless_charging(void *device_data);
 static void game_enhancer_grip_rejection(void *device_data);
 static void jitter_filter_mode(void *device_data);
 static void not_support_cmd(void *device_data);
+static void get_doze_mode(void *device_data);
 
 static void sec_ts_print_frame(struct sec_ts_data *ts, short *min, short *max);
 
@@ -173,6 +174,7 @@ static struct sec_cmd sec_cmds[] = {
 	{SEC_CMD("game_enhancer_grip_rejection", game_enhancer_grip_rejection),},
 	{SEC_CMD("jitter_filter_mode", jitter_filter_mode),},
 	{SEC_CMD("not_support_cmd", not_support_cmd),},
+	{SEC_CMD("get_doze_mode", get_doze_mode),},
 };
 
 static ssize_t scrub_position_show(struct device *dev,
@@ -5504,6 +5506,53 @@ static void not_support_cmd(void *device_data)
 	sec_cmd_set_cmd_result(sec, buff, strnlen(buff, sizeof(buff)));
 	sec->cmd_state = SEC_CMD_STATUS_NOT_APPLICABLE;
 	sec_cmd_set_cmd_exit(sec);
+}
+
+static void get_doze_mode(void *device_data)
+{
+	struct sec_cmd_data *sec = (struct sec_cmd_data *)device_data;
+	struct sec_ts_data *ts = container_of(sec, struct sec_ts_data, sec);
+	char buff[16] = { 0 };
+	char doze_mode_info = 0;
+	char rate_mode_info = 0;
+	int ret;
+
+	sec_cmd_set_default_result(sec);
+
+	// Read doze mode
+	ret = ts->sec_ts_i2c_read(ts, SEC_TS_CMD_ENABLE_DOZE, &doze_mode_info,
+				  1);
+	if (ret < 0) {
+		input_err(true, &ts->client->dev, "%s: i2c fail!, %d\n",
+			  __func__, ret);
+		goto err;
+	}
+
+	// Read rate mode, note that this is not valid if img_of_version_ic[0] is 0x17
+	if (ts->plat_data->img_version_of_ic[0] != 0x17) {
+		ret = ts->sec_ts_i2c_read(ts, SEC_TS_CMD_REPORT_RATE_CONTROL,
+					  &rate_mode_info, 1);
+		if (ret < 0) {
+			input_err(true, &ts->client->dev, "%s: i2c fail: %d\n",
+				  __func__, ret);
+			goto err;
+		}
+	} else {
+		rate_mode_info = 2;
+	}
+
+	input_info(true, &ts->client->dev, "%s: doze_mode: %d, rate_mode: %d",
+		   __func__, doze_mode_info, rate_mode_info);
+	snprintf(buff, sizeof(buff), "%d,%d", doze_mode_info, rate_mode_info);
+	sec_cmd_set_cmd_result(sec, buff, strnlen(buff, sizeof(buff)));
+	sec->cmd_state = SEC_CMD_STATUS_OK;
+	return;
+
+err:
+	snprintf(buff, sizeof(buff), "NA");
+	sec_cmd_set_cmd_result(sec, buff, strnlen(buff, sizeof(buff)));
+	sec->cmd_state = SEC_CMD_STATUS_FAIL;
+	input_info(true, &ts->client->dev, "%s: %s\n", __func__, buff);
 }
 
 int sec_ts_fn_init(struct sec_ts_data *ts)

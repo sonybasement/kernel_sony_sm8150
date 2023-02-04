@@ -342,6 +342,7 @@ static int __cam_isp_ctx_handle_buf_done_in_activated_state(
 	struct cam_ctx_request  *req;
 	struct cam_isp_ctx_req  *req_isp;
 	struct cam_context *ctx = ctx_isp->base;
+	uint64_t buf_done_req_id;
 
 	if (list_empty(&ctx->active_req_list)) {
 		CAM_DBG(CAM_ISP, "Buf done with no active request!");

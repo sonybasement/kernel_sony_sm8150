@@ -157,10 +157,6 @@ endif
 LINUX_INC +=	-Iinclude/linux
 
 INCS +=		$(COMMON_INC) \
-		$(UAPI_INC) \
-		$(SOMC_INC) \
-		$(SOMC_UAPI_INC)
-INCS += -include $(SOMC_AUDIO_ROOT)/config/somcaudioconf.h
 
 EXTRA_CFLAGS += $(INCS)
 

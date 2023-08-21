@@ -42,8 +42,8 @@
 #include <dsp/q6core.h>
 #include "adsp_err.h"
 
-#include "sony-hweffect/sony-hweffect.h"
-#include "sony-hweffect/sony-hweffect-params.h"
+#include "sound/sony-hweffect.h"
+#include "sound/sony-hweffect-params.h"
 
 #define TIMEOUT_MS  1000
 #define TRUE        0x01

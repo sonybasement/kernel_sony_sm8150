@@ -46,8 +46,8 @@
 #include <dsp/msm-audio-effects-q6-v2.h>
 #include "msm-pcm-routing-v2.h"
 #include "msm-qti-pp-config.h"
-#include "sony-hweffect/msm-sony-hweffect.h"
-#include "sony-hweffect/sony-hweffect-params.h"
+#include "msm-sony-hweffect.h"
+#include "sound/sony-hweffect-params.h"
 
 #define TIMEOUT_MS			1000
 #define DSP_PP_BUFFERING_IN_MSEC	25
